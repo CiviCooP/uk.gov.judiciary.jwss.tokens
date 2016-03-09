@@ -5,11 +5,17 @@ require_once 'tokens.civix.php';
 function tokens_civicrm_tokens(&$tokens) {
   $careerHistory = CRM_Tokens_CareerHistory::singleton();
   $careerHistory->tokens($tokens);
+
+  $shadowingApplication = CRM_Tokens_ShadowingApplication::singleton();
+  $shadowingApplication->tokens($tokens);
 }
 
 function tokens_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = array(), $context = null) {
   $careerHistory = CRM_Tokens_CareerHistory::singleton();
   $careerHistory->tokenValues($values, $cids);
+
+  $shadowingApplication = CRM_Tokens_ShadowingApplication::singleton();
+  $shadowingApplication->tokenValues($values, $cids);
 }
 
 /**
