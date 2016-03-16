@@ -34,6 +34,10 @@ class CRM_Tokens_CareerHistory {
   }
 
   public function tokenValues(&$values, $cids) {
+    if (!$this->custom_group) {
+      return;
+    }
+    
     $contacts_ids = $cids;
     if (!is_array($cids)) {
       $contacts_ids = array($cids);
@@ -90,6 +94,16 @@ class CRM_Tokens_CareerHistory {
       $actualPHPFormats = CRM_Core_SelectValues::datePluginToPHPFormats();
       $dateFormat = (array) CRM_Utils_Array::value($field['date_format'], $actualPHPFormats);
       $value = CRM_Utils_Date::processDate($value, NULL, FALSE, implode(" ", $dateFormat));
+    } elseif (!empty($field['option_group_id']) && $value) {
+      try {
+        $value = civicrm_api3('OptionValue', 'getvalue', array(
+          'return' => 'label',
+          'option_group_id' => $field['option_group_id'],
+          'value' => $value,
+        ));
+      } catch (Exception $e) {
+        throw $e;
+      }
     }
     return $value;
   }
