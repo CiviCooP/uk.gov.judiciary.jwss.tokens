@@ -1,6 +1,20 @@
 <?php
 
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+
 require_once 'tokens.civix.php';
+require_once 'CRM/Tokens/ActivityOwner.php';
+
+function tokens_civicrm_container($container) {
+  $container->addResource(new \Symfony\Component\Config\Resource\FileResource(__FILE__));
+  $def = new Definition(
+    'CRM_Tokens_ActivityOwner',
+    array()
+  );
+  $container->setDefinition('activity_owner_tokens', $def)->addTag('kernel.event_subscriber');
+}
 
 function tokens_civicrm_tokens(&$tokens) {
   $careerHistory = CRM_Tokens_CareerHistory::singleton();
@@ -8,6 +22,9 @@ function tokens_civicrm_tokens(&$tokens) {
 
   $shadowingApplication = CRM_Tokens_ShadowingApplication::singleton();
   $shadowingApplication->tokens($tokens);
+
+  $activityOwner = new CRM_Tokens_ActivityOwner();
+  $activityOwner->tokens($tokens);
 }
 
 function tokens_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = array(), $context = null) {

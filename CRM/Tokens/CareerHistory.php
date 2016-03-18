@@ -37,7 +37,7 @@ class CRM_Tokens_CareerHistory {
     if (!$this->custom_group) {
       return;
     }
-    
+
     $contacts_ids = $cids;
     if (!is_array($cids)) {
       $contacts_ids = array($cids);
